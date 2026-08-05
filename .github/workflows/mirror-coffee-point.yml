@@ -1,0 +1,52 @@
+name: Mirror Coffee Point project
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/mirror-coffee-point.yml
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout Coffee Point source repository
+        uses: actions/checkout@v4
+        with:
+          repository: seeam-labs/sayem1122
+          ref: main
+          path: .coffee-point-source
+
+      - name: Replace target contents with source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name .git \
+            ! -name .coffee-point-source \
+            -exec rm -rf {} +
+          rsync -a --delete --exclude='.git' .coffee-point-source/ ./
+          rm -rf .coffee-point-source
+
+      - name: Commit mirrored project
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Target is already synchronized."
+            exit 0
+          fi
+          git commit -m "Mirror Coffee Point project from seeam-labs/sayem1122"
+          git push origin HEAD:main
