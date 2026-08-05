@@ -1,0 +1,47 @@
+name: Build Coffee Point target import branch
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-import:
+    if: github.event.pull_request.title == '[automation] Build Coffee Point import branch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout trusted Coffee Point source
+        uses: actions/checkout@v6
+        with:
+          repository: seeam-labs/sayem1122
+          ref: main
+          path: source-tree
+
+      - name: Clone target repository history
+        shell: bash
+        run: git clone --branch main --single-branch https://github.com/seeam-labs/Coffee-Point.git import-work
+
+      - name: Overlay exact source tree on target history
+        shell: bash
+        run: |
+          set -euo pipefail
+          find import-work -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          rsync -a --delete --exclude='.git' source-tree/ import-work/
+
+      - name: Commit and publish mergeable import branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd import-work
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B import/coffee-point-to-target
+          git add -A
+          git commit -m "Import complete Coffee Point project"
+          git remote add source-auth "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force source-auth HEAD:refs/heads/import/coffee-point-to-target
