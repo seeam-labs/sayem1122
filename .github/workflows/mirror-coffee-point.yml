@@ -16,16 +16,16 @@ permissions:
 
 jobs:
   mirror:
-    if: github.event_name != 'issues' || github.event.issue.title == '[automation] Mirror Coffee Point project'
+    if: github.event_name != 'issues' || github.event.issue.title == '[automation] Mirror Coffee Point project v2'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Checkout Coffee Point source repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: seeam-labs/sayem1122
           ref: main
