@@ -2,6 +2,8 @@ name: Mirror Coffee Point project
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
   issues:
     types:
       - opened
