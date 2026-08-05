@@ -1,0 +1,8 @@
+{
+  "name": "কফি পয়েন্ট - Coffee Point & Masterchef Craft Rabbi Interactive & Printable Menu",
+  "description": "Interactive digital menu, custom combo builder, QR code table menu, and physical A4/Table-Stand print-ready menu for Coffee Point in Keraniganj.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
