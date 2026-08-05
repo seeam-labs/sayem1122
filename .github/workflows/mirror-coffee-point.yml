@@ -1,6 +1,10 @@
 name: Mirror Coffee Point project
 
 on:
+  workflow_dispatch:
+  issues:
+    types:
+      - opened
   push:
     branches:
       - main
@@ -12,6 +16,7 @@ permissions:
 
 jobs:
   mirror:
+    if: github.event_name != 'issues' || github.event.issue.title == '[automation] Mirror Coffee Point project'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target repository
