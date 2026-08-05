@@ -31,7 +31,7 @@ jobs:
           find import-work -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           rsync -a --delete --exclude='.git' source-tree/ import-work/
 
-      - name: Commit and publish mergeable import branch
+      - name: Commit and publish import commit
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -43,5 +43,13 @@ jobs:
           git checkout -B import/coffee-point-to-target
           git add -A
           git commit -m "Import complete Coffee Point project"
+
           git remote add source-auth "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force source-auth HEAD:refs/heads/import/coffee-point-to-target
+
+          git remote add target-auth "https://x-access-token:${GH_TOKEN}@github.com/seeam-labs/Coffee-Point.git"
+          if git push target-auth HEAD:main; then
+            echo "TARGET_PUSH_SUCCEEDED=true"
+          else
+            echo "TARGET_PUSH_SUCCEEDED=false"
+          fi
