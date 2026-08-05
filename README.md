@@ -1,22 +1,23 @@
-# Coffee Point — Masterchef Rabby
+# Coffee Point Restaurant
 
-Premium Bangla interactive restaurant web application for Coffee Point, Sonar Bangla Gate, Godabag, Keraniganj.
+Interactive React/Vite restaurant menu and business application for Coffee Point, Keraniganj.
 
-## Highlights
+## Deployments
 
-- Interactive food menu, search, filters and cart
-- Masterchef Rabby profile and Kuwait journey
-- Glassmorphism mobile navigation
-- Printable menu and table QR experience
-- Camera, gallery, reviews and AR preview
-- Password-protected admin, inventory and KDS dashboard
-- Vercel and Cloudflare Pages ready
+- GitHub Pages: https://seeam-labs.github.io/sayem1122/
+- Vercel: https://coffee-point-restaurant.vercel.app
 
-## Local preview
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Developed by [Seeam](https://seeam.vercel.app).
+## Production build
+
+```bash
+npm run build
+```
+
+The `main` branch is deployed automatically to GitHub Pages by `.github/workflows/deploy-pages.yml`. Vercel configuration is stored in `vercel.json`, and the AI recommendation endpoint is available at `/api/recommend` on Vercel.
