@@ -1,0 +1,41 @@
+name: Materialize Coffee Point production source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/materialize-production.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout production branch
+        uses: actions/checkout@v6
+        with:
+          ref: agent/production-super-app
+          fetch-depth: 0
+      - name: Restore source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .source-bundle/chunk-* | base64 --decode > /tmp/coffee-point-source.tar.xz
+          mkdir -p /tmp/coffee-point-source
+          tar -xJf /tmp/coffee-point-source.tar.xz -C /tmp/coffee-point-source
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .source-bundle ! -name .github -exec rm -rf {} +
+          cp -a /tmp/coffee-point-source/. ./
+          rm -rf .source-bundle
+          rm -f .github/workflows/materialize-source.yml
+      - name: Commit restored application
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: publish Coffee Point production super app'
+          git push origin HEAD:agent/production-super-app
